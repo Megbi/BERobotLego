@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;
 
 import lejos.nxt.remote.AsciizCodec;
+import lejos.pc.comm.NXTComm;
 import parcours.Node;
 import parcours.TypeCase;
 
@@ -13,6 +14,7 @@ public class IARobot {
     static byte[] demitour;
     static byte[] slipgauche;
     static byte[] slipdroit;
+    static byte[] wait;
 	
 	public static void deplacement(Robot robot, Node destination) throws IOException, InterruptedException{
 		boolean care = true;
@@ -122,5 +124,18 @@ public class IARobot {
         slipdroit[1]=(byte)0x00;
         System.arraycopy(AsciizCodec.encode("sd.rxe"), 0, slipdroit, 2, AsciizCodec.encode("sd.rxe").length);
         
+        wait = new byte[2];
+        wait[0]=(byte)0x00;
+        wait[1]=(byte)0x11;
+        
+    }
+    
+    public Boolean isRunning(Robot robot) throws IOException{
+    	byte[] answer = new byte[22];
+    	answer = robot.getComm().sendRequest(slipdroit,22);
+    	if (answer[2]==(byte)0x00) {
+    		return true;
+		}
+        return false;
     }
 }
