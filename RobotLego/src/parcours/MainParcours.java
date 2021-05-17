@@ -12,31 +12,58 @@ public class MainParcours {
 	public static void main(String[] args) throws NXTCommException, IOException, InterruptedException {
 		Node nodeStart = new Node("Empty", -1, -1, TypeCase.LIGNE, false, false);
 		
-		Node nodeA = new Node("A", 0, 0, TypeCase.LIGNE, true, false);
-		Node nodeB = new Node("B", 0, 1, TypeCase.LIGNE, false, true);
+		Node nodeA = new Node("A", 0, 0, TypeCase.VIRAGE, true, false);
+		Node nodeB = new Node("B", 0, 1, TypeCase.SLIP, false, false);
 		Node nodeC = new Node("C", 0, 2, TypeCase.SLIP, false, false);
-		Node nodeD = new Node("D", 1, 2, TypeCase.SLIP, false, false); 
-		Node nodeE = new Node("E", 1, 3, TypeCase.LIGNE, false, false);
-		Node nodeF = new Node("F", 2, 0, TypeCase.LIGNE, false, true);
-		Node nodeG = new Node("G", 2, 1, TypeCase.LIGNE, true, false);
-		Node nodeH = new Node("H", 2, 2, TypeCase.SLIP, false, false);
+		Node nodeO = new Node("O", 0, 3, TypeCase.VIRAGE, true, false);
+		Node nodeD = new Node("D", 1, 0, TypeCase.LIGNE, false, false); 
+		Node nodeE = new Node("E", 1, 1, TypeCase.LIGNE, false, false);
+		Node nodeF = new Node("F", 1, 2, TypeCase.VIRAGE, false, false);
+		Node nodeG = new Node("G", 1, 3, TypeCase.SLIP, false, true);
+		Node nodeH = new Node("H", 2, 0, TypeCase.VIRAGE, true, false);
+		Node nodeI = new Node("I", 2, 1, TypeCase.SLIP, false, true);
+		Node nodeJ = new Node("J", 2, 2, TypeCase.LIGNE, false, false);
+		Node nodeK = new Node("K", 2, 3, TypeCase.LIGNE, false, false);
+		Node nodeL = new Node("L", 3, 1, TypeCase.VIRAGE, false, false);
+		Node nodeM = new Node("M", 3, 2, TypeCase.SLIP, false, false);
+		Node nodeN = new Node("N", 3, 3, TypeCase.VIRAGE, true, false);
 		
+		nodeB.setJointures(1, 1);
 		nodeC.setJointures(1, 2);
-		nodeD.setJointures(1, 3);
-		nodeH.setJointures(1, 2);
+		nodeG.setJointures(1, 2);
+		nodeI.setJointures(2, 0);
+		nodeM.setJointures(2, 2);
 
 		nodeA.addDestination(nodeB, 1);
+		nodeA.addDestination(nodeD, 1);
 		
 		nodeB.addDestination(nodeC, 1);
+		nodeB.addDestination(nodeE, 1);
+
+		nodeC.addDestination(nodeO, 1);
+		nodeC.addDestination(nodeF, 1);
 		
-		nodeC.addDestination(nodeD, 1);
+		nodeO.addDestination(nodeG, 1);
 		
-		nodeD.addDestination(nodeE, 1);
 		nodeD.addDestination(nodeH, 1);
 		
-		nodeH.addDestination(nodeG, 1);
+		nodeE.addDestination(nodeI, 1);
 		
-		nodeG.addDestination(nodeF, 1);
+		nodeF.addDestination(nodeG, 1);
+		
+		nodeG.addDestination(nodeK, 1);
+		
+		nodeH.addDestination(nodeI, 1);
+		
+		nodeI.addDestination(nodeL, 1);
+		
+		nodeJ.addDestination(nodeM, 1);
+		
+		nodeK.addDestination(nodeN, 1);
+		
+		nodeL.addDestination(nodeM, 1);
+		
+		nodeM.addDestination(nodeN, 1);
 
 		Graph graph = new Graph();
 
@@ -48,15 +75,22 @@ public class MainParcours {
 		graph.addNode(nodeF);
 		graph.addNode(nodeG);
 		graph.addNode(nodeH);
+		graph.addNode(nodeI);
+		graph.addNode(nodeJ);
+		graph.addNode(nodeK);
+		graph.addNode(nodeL);
+		graph.addNode(nodeM);
+		graph.addNode(nodeN);
+		graph.addNode(nodeO);
 		
-		Node nodeDepart = nodeE;
+		Node nodeDepart = nodeJ;
 		Node previousNode = nodeStart;
 		
 		Robot robot = new Robot(nodeDepart, previousNode, "OwOmega");
 		
 		IARobot.init();
 		
-		finish(graph, nodeDepart, robot);
+		finish(graph, robot);
 
 		System.out.println("");
 		System.out.println("Merci d'avoir fait confiance à OwOmega pour votre prise en charge santé");
@@ -72,10 +106,11 @@ public class MainParcours {
 		System.out.println("*** Parcours de "+nodeDepart.getName()+" vers "+nodeArrivee.getName()+" ***");
 		
 		for(Node n : nodeArrivee.getShortestPath()){
-			
-			System.out.println("- On part de la case "+robot.getCaseActuelle().getName()+" et on va" +
+			if(!n.equals(robot.getCaseActuelle())){
+				System.out.println("- On part de la case "+robot.getCaseActuelle().getName()+" et on va" +
 						" sur la case "+n.getName());
-			IARobot.deplacement(robot,n);
+				IARobot.deplacement(robot,n);
+			}
 		}
 		
 		System.out.println("- On touche au but, de la case "+robot.getCaseActuelle().getName()+" à la case "+nodeArrivee.getName());
@@ -118,21 +153,20 @@ public class MainParcours {
 		return resultat;
 	}
 	
-	public static void finish(Graph graph, Node nodeDepart, Robot robot) throws IOException, InterruptedException{
+	public static void finish(Graph graph, Robot robot) throws IOException, InterruptedException{
 		while(!graph.listeVictimes().isEmpty()){
-			Node nodeArrivee = closestVictim(graph, nodeDepart, robot);
-			parcours(graph,nodeDepart,nodeArrivee,robot);
-			nodeDepart = nodeArrivee;
+			Node nodeArrivee = closestVictim(graph, robot.getCaseActuelle(), robot);
+			parcours(graph, robot.getCaseActuelle(), nodeArrivee, robot);
 			if(robot.getNombreVictimes() == Robot.getNombrevictimesmax()){
-				Node nodeHopital = closestHospital(graph, nodeDepart, robot);
-				parcours(graph, nodeDepart, nodeHopital, robot);
-				nodeDepart = nodeHopital;
+				Node nodeHopital = closestHospital(graph, robot.getCaseActuelle(), robot);
+				parcours(graph, robot.getCaseActuelle(), nodeHopital, robot);
 			}
 		}
 		if(robot.getNombreVictimes() > 0){
-			Node nodeHopital = closestHospital(graph, nodeDepart, robot);
-			parcours(graph, nodeDepart, nodeHopital, robot);
-			nodeDepart = nodeHopital;
+			Node nodeHopital = closestHospital(graph, robot.getCaseActuelle(), robot);
+			parcours(graph, robot.getCaseActuelle(), nodeHopital, robot);
 		}
+		// parcours(graph, robot.getCaseActuelle(), robot.getCaseDerriere(), robot);
+		// fait un demi-tour pour considérer que le robot est passé par la case
 	}
 }

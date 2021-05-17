@@ -3,14 +3,18 @@ package ConnectionBluetooth;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
+import java.util.Set;
 
 import lejos.nxt.remote.AsciizCodec;
-import lejos.nxt.remote.NXTCommand;
 import lejos.pc.comm.NXTComm;
+import parcours.Node;
+import parcours.TypeCase;
 
 public class Deplacements implements KeyListener{
 
-    NXTComm robot;
+    NXTComm commRobot;
+    Robot robot;
     byte[] request;
     byte[] requeste;
     byte[] avancer;
@@ -34,16 +38,11 @@ public class Deplacements implements KeyListener{
 		return slipdroit;
 	}
 
-	public Deplacements(NXTComm robot) {
-        this.robot = robot;
+	public Deplacements(Robot robot) {
+		this.robot = robot;
+        this.commRobot = robot.getComm();
         try{
-            this.requeste = new byte[22];
-            requeste[0]=(byte)0x00;
-            requeste[1]=(byte)0x00;
-            System.arraycopy(AsciizCodec.encode("Main.rxe"), 0, this.requeste, 2, AsciizCodec.encode("Main.rxe").length);
-            
             init();
-            this.request = new byte[] { (byte)0x00,(byte)0x09,(byte)0x01,(byte)0x02,AsciizCodec.encode("1")[0],(byte)0};
             }
             catch(Exception e){
             	
@@ -73,36 +72,36 @@ public class Deplacements implements KeyListener{
         System.arraycopy(AsciizCodec.encode("sd.rxe"), 0, this.slipdroit, 2, AsciizCodec.encode("sd.rxe").length);
         
     }
-//    "Main.rxe"
-//    77
-//    97
-//    105
-//    110
-//    46
-//    114
-//    120
-//    101
-//    0
-    NXTCommand commander = new NXTCommand(robot);
 
 	@Override
     public void keyPressed(KeyEvent arg0) {
         int keyCode = arg0.getKeyCode();
         try{
             // ajouter ZQSD pour ajuster manuellement
-            //System.out.println(commander.getFirmwareVersion());
             switch(keyCode) {
             case KeyEvent.VK_UP:
-            	robot.sendRequest(avancer, 3);
-                break;
+            	if(((robot.getCaseActuelle().getType() == TypeCase.VIRAGE)||(robot.getCaseActuelle().getType() == TypeCase.LIGNE)) && avancerPlayer(robot)){
+            		commRobot.sendRequest(avancer, 3);
+            		System.out.println("From : "+robot.getCaseDerriere().getName()+" | To : "+robot.getCaseActuelle().getName()+" | Move on : "+robot.getCaseDerriere().getType());
+                }
+            	break;
             case KeyEvent.VK_DOWN:
-            	robot.sendRequest(demitour, 3);
+            	if(demitourPlayer(robot)){
+            		commRobot.sendRequest(demitour, 3);
+            		System.out.println("From : "+robot.getCaseDerriere().getName()+" | To : "+robot.getCaseActuelle().getName()+" | Move on : "+robot.getCaseDerriere().getType());
+            	}
             	break;
             case KeyEvent.VK_RIGHT:
-            	robot.sendRequest(slipdroit, 3);
+            	if((robot.getCaseActuelle().getType() == TypeCase.SLIP) && slipDroitPlayer(robot)){
+            		commRobot.sendRequest(slipdroit, 3);
+            		System.out.println("From : "+robot.getCaseDerriere().getName()+" | To : "+robot.getCaseActuelle().getName()+" | Move on : "+robot.getCaseDerriere().getType());
+                }
             	break;
             case KeyEvent.VK_LEFT:
-            	robot.sendRequest(slipgauche, 3);
+            	if((robot.getCaseActuelle().getType() == TypeCase.SLIP) && slipGauchePlayer(robot)){
+            		commRobot.sendRequest(slipgauche, 3);
+            		System.out.println("From : "+robot.getCaseDerriere().getName()+" | To : "+robot.getCaseActuelle().getName()+" | Move on : "+robot.getCaseDerriere().getType());
+                }
             	break;
             default:
                 break;
@@ -120,5 +119,79 @@ public class Deplacements implements KeyListener{
     @Override
     public void keyTyped(KeyEvent arg0) {
         // TODO Auto-generated method stub
+    }
+    
+    public boolean avancerPlayer(Robot robot){
+    	Map<Node,Integer> liste = robot.getCaseActuelle().getAdjacentNodes();
+    	Set<Node> nodeAdjacentes = liste.keySet();
+    	Node destination = null;
+    	boolean temp = false;
+    	for(Node n : nodeAdjacentes){
+    		if(!n.equals(robot.getCaseActuelle()) && !n.equals(robot.getCaseDerriere())){
+    			temp = true;
+    			destination = n;
+    		}// retirer plutot de la liste les cases actuelles et derriere et regarder la taille de la liste 0/1/2
+    	}
+    	if(temp){
+    		robot.setCaseDerriere(robot.getCaseActuelle());
+        	robot.setCaseActuelle(destination);
+    	}
+    	return temp;
+    }
+    
+    public boolean demitourPlayer(Robot robot){
+    	Map<Node,Integer> liste = robot.getCaseActuelle().getAdjacentNodes();
+    	Set<Node> nodeAdjacentes = liste.keySet();
+    	boolean test = false;
+    	
+    	for(Node n : nodeAdjacentes){
+    		if(n.equals(robot.getCaseDerriere())){
+    			test = true;
+    		}
+    	}
+    	if(test){
+    		Node destination = robot.getCaseDerriere();
+    		robot.setCaseDerriere(robot.getCaseActuelle());
+        	robot.setCaseActuelle(destination);
+    	}
+    	return test;
+    }
+    
+    public boolean slipDroitPlayer(Robot robot){
+    	Map<Node,Integer> liste = robot.getCaseActuelle().getAdjacentNodes();
+    	Set<Node> nodeAdjacentes = liste.keySet();
+    	Node destination = null;
+    	boolean test = false;
+    	
+    	for(Node n : nodeAdjacentes){
+    		if(IARobot.isSlipDroite(robot, n) && !(n.equals(robot.getCaseDerriere()))){
+    			destination = n;
+    			test = true;
+    		}
+    	}
+    	if(test){
+    		robot.setCaseDerriere(robot.getCaseActuelle());
+        	robot.setCaseActuelle(destination);
+    	}
+    	return test;
+    }
+    
+    public boolean slipGauchePlayer(Robot robot){
+    	Map<Node,Integer> liste = robot.getCaseActuelle().getAdjacentNodes();
+    	Set<Node> nodeAdjacentes = liste.keySet();
+    	Node destination = null;
+    	boolean test = false;
+    	
+    	for(Node n : nodeAdjacentes){
+    		if(!IARobot.isSlipDroite(robot, n) && !(n.equals(robot.getCaseDerriere()))){
+    			destination = n;
+    			test = true;
+    		}
+    	}
+    	if(test){
+    		robot.setCaseDerriere(robot.getCaseActuelle());
+        	robot.setCaseActuelle(destination);
+    	}
+    	return test;
     }
 }

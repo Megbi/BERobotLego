@@ -47,16 +47,16 @@ public class Robot {
 		if(node.isVictime() && (this.nombreVictimes < nombreVictimesMax)){
 			this.nombreVictimes++;
 			node.setVictime(false);
-			System.out.println("Victime récupérée");
+			System.out.println("-> Victime récupérée <-");
 		}
 		else if(node.isVictime() && (this.nombreVictimes == nombreVictimesMax)){
-			System.out.println("Impossible de prendre une victime supplémentaire");
+			System.out.println("-> Impossible de prendre une victime supplémentaire <-");
 		}
 	}
 	
 	public void depotVictimes(Node node){
 		if((nombreVictimes >= 1) && node.isHopital()){
-			System.out.println("Victime(s) déposée(s)");
+			System.out.println("-> Victime(s) déposée(s) <-");
 			this.nombreVictimes = 0;
 		}
 	}

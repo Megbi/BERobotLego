@@ -5,7 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;
 
 import lejos.nxt.remote.AsciizCodec;
-import lejos.pc.comm.NXTComm;
 import parcours.Node;
 import parcours.TypeCase;
 
@@ -17,12 +16,7 @@ public class IARobot {
     static byte[] wait;
 	
 	public static void deplacement(Robot robot, Node destination) throws IOException, InterruptedException{
-		boolean care = true;
-		if(robot.getCaseActuelle().equals(destination)){
-			care = false;
-			System.out.println("Aucune action effectuée");
-		}
-		else if(robot.getCaseDerriere().equals(destination)){
+		if(robot.getCaseDerriere().equals(destination)){
 			robot.getComm().sendRequest(demitour,3);
 			System.out.println("Le robot effectue Demi-tour");
 		}
@@ -42,14 +36,14 @@ public class IARobot {
 				System.out.println("Le robot effectue AvancerF");
 			}
 		}
-		if(care){
-			robot.setCaseDerriere(robot.getCaseActuelle());
-			robot.setCaseActuelle(destination);
+		robot.setCaseDerriere(robot.getCaseActuelle());
+		robot.setCaseActuelle(destination);
+		while(isRunning(robot)){
+			TimeUnit.MICROSECONDS.sleep(100);
 		}
-		
 		robot.recuperationVictime(destination);
 		robot.depotVictimes(destination);
-		TimeUnit.SECONDS.sleep(7);
+		TimeUnit.SECONDS.sleep(1);
 	}
 	
 	public static boolean isSlipDroite(Robot robot, Node destination){
@@ -130,9 +124,9 @@ public class IARobot {
         
     }
     
-    public Boolean isRunning(Robot robot) throws IOException{
+    public static Boolean isRunning(Robot robot) throws IOException{
     	byte[] answer = new byte[22];
-    	answer = robot.getComm().sendRequest(slipdroit,22);
+    	answer = robot.getComm().sendRequest(wait,22);
     	if (answer[2]==(byte)0x00) {
     		return true;
 		}
