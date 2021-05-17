@@ -86,37 +86,38 @@ public class MainParcours {
 		Node nodeDepart = nodeJ;
 		Node previousNode = nodeStart;
 		
-		Robot robot = new Robot(nodeDepart, previousNode, "OwOmega");
+		Robot robotIA = new Robot(nodeDepart, previousNode, "OwOmega");
+		Robot robotPlayer = new Robot(nodeK, nodeN, "FUBUKI");
 		
-		IARobot.init();
-		
-		finish(graph, robot);
+		finish(graph, robotIA, robotPlayer);
 
 		System.out.println("");
 		System.out.println("Merci d'avoir fait confiance à OwOmega pour votre prise en charge santé");
 		System.out.println("");
 	}
 	
-	public static void parcours(Graph graph, Node nodeDepart, Node nodeArrivee, Robot robot) throws IOException, InterruptedException{
+	public static void parcours(Graph graph, Node nodeDepart, Node nodeArrivee, Robot robotIA, Robot robotPlayer) throws IOException, InterruptedException{
 		graph.djikstraReset();
 		
 		graph = Dijkstra.calculateShortestPathFromSource(graph, nodeDepart);
 		
 		System.out.println("");
-		System.out.println("*** Parcours de "+nodeDepart.getName()+" vers "+nodeArrivee.getName()+" ***");
+		System.out.println("*** "+robotIA.getName()+" fait le parcours de "+nodeDepart.getName()+" vers "+nodeArrivee.getName()+" ***");
 		
 		for(Node n : nodeArrivee.getShortestPath()){
-			if(!n.equals(robot.getCaseActuelle())){
-				System.out.println("- On part de la case "+robot.getCaseActuelle().getName()+" et on va" +
-						" sur la case "+n.getName());
-				IARobot.deplacement(robot,n);
+			if(!n.equals(robotIA.getCaseActuelle())){
+				//System.out.println("- On part de la case "+robotIA.getCaseActuelle().getName()+" et on va" +
+				//		" sur la case "+n.getName());
+				//System.out.println("From : "+robotIA.getCaseDerriere().getName()+" ("+robotIA.getCaseDerriere().getType()+") | To : "+robotIA.getCaseActuelle().getName()+" ("+robotIA.getCaseActuelle().getType()+") | -> "+robotIA.getName());
+				System.out.println(robotIA.getName()+" : "+robotIA.getCaseActuelle().getName()+" -> "+n.getName()+" ("+robotIA.getCaseActuelle().getType()+")");
+				IARobot.deplacement(robotIA, robotPlayer, n);
 			}
 		}
 		
-		System.out.println("- On touche au but, de la case "+robot.getCaseActuelle().getName()+" à la case "+nodeArrivee.getName());
-		IARobot.deplacement(robot, nodeArrivee);
-		System.out.println("Vous êtes arrivé sur la case "+nodeArrivee.getName());
-		System.out.println("");
+		System.out.println(robotIA.getName()+" : "+robotIA.getCaseActuelle().getName()+" -> "+nodeArrivee.getName()+" ("+robotIA.getCaseActuelle().getType()+")");
+		IARobot.deplacement(robotIA, robotPlayer, nodeArrivee);
+		//System.out.println("Vous êtes arrivé sur la case "+nodeArrivee.getName());
+		//System.out.println("");
 	}
 
 	public static int poidsChemin(Graph graph, Node nodeDepart, Node nodeArrivee, Robot robot){
@@ -153,20 +154,28 @@ public class MainParcours {
 		return resultat;
 	}
 	
-	public static void finish(Graph graph, Robot robot) throws IOException, InterruptedException{
+	public static void finish(Graph graph, Robot robotIA, Robot robotPlayer) throws IOException, InterruptedException{
+		IARobot.init();
+		
 		while(!graph.listeVictimes().isEmpty()){
-			Node nodeArrivee = closestVictim(graph, robot.getCaseActuelle(), robot);
-			parcours(graph, robot.getCaseActuelle(), nodeArrivee, robot);
-			if(robot.getNombreVictimes() == Robot.getNombrevictimesmax()){
-				Node nodeHopital = closestHospital(graph, robot.getCaseActuelle(), robot);
-				parcours(graph, robot.getCaseActuelle(), nodeHopital, robot);
+			Node nodeArrivee = closestVictim(graph, robotIA.getCaseActuelle(), robotIA);
+			parcours(graph, robotIA.getCaseActuelle(), nodeArrivee, robotIA, robotPlayer);
+			if(robotIA.getNombreVictimes() == Robot.getNombrevictimesmax()){
+				Node nodeHopital = closestHospital(graph, robotIA.getCaseActuelle(), robotIA);
+				parcours(graph, robotIA.getCaseActuelle(), nodeHopital, robotIA, robotPlayer);
 			}
 		}
-		if(robot.getNombreVictimes() > 0){
-			Node nodeHopital = closestHospital(graph, robot.getCaseActuelle(), robot);
-			parcours(graph, robot.getCaseActuelle(), nodeHopital, robot);
+		if(robotIA.getNombreVictimes() > 0){
+			Node nodeHopital = closestHospital(graph, robotIA.getCaseActuelle(), robotIA);
+			parcours(graph, robotIA.getCaseActuelle(), nodeHopital, robotIA, robotPlayer);
 		}
+		
+		System.out.println(robotIA.getName()+" a fini son service");
 		// parcours(graph, robot.getCaseActuelle(), robot.getCaseDerriere(), robot);
 		// fait un demi-tour pour considérer que le robot est passé par la case
+		
+		System.out.println("");
+		System.out.println("Merci d'avoir fait confiance à OwOmega pour votre prise en charge santé");
+		System.out.println("");
 	}
 }

@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 
 import lejos.pc.comm.NXTCommException;
 import parcours.Graph;
+import parcours.MainParcours;
 import parcours.Node;
 import parcours.TypeCase;
 
@@ -20,6 +21,8 @@ public class BluetoothConnection {
 	        System.exit(1);
 	    }
 	    nxtComm.open(nxtInfo[0]);*/
+		Node nodeStart = new Node("Empty", -1, -1, TypeCase.LIGNE, false, false);
+		  
 		Node nodeA = new Node("A", 0, 0, TypeCase.VIRAGE, true, false);
 		Node nodeB = new Node("B", 0, 1, TypeCase.SLIP, false, false);
 		Node nodeC = new Node("C", 0, 2, TypeCase.SLIP, false, false);
@@ -90,17 +93,24 @@ public class BluetoothConnection {
 		graph.addNode(nodeN);
 		graph.addNode(nodeO);
 			
-		Node caseDepart = nodeJ;
-		Node caseDerriere = nodeF;
+		Node caseDepartPlayer = nodeK;
+		Node caseDerrierePlayer = nodeN;
+		
+		Node caseDepartIA = nodeJ;
+		Node caseDerriereIA = nodeF;
 		  
-	    Robot robotPlayer = new Robot(caseDepart, caseDerriere, "OwOmega");
+	    Robot robotPlayer = new Robot(caseDepartPlayer, caseDerrierePlayer, "OwOmega");
+	    Robot robotIA = new Robot(caseDepartIA, caseDerriereIA, "FUBUKI");
+	    
+	    
 	    
 	    JFrame f = new JFrame();
 	    f.addKeyListener(new Deplacements(robotPlayer));
 	    f.setVisible(true);
 	    f.setSize(new Dimension(500, 500)); 
 	    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+	    
+	    MainParcours.finish(graph, robotIA, robotPlayer);
 	    
 	    f.addWindowListener(new java.awt.event.WindowAdapter() {
 	        @Override

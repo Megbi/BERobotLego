@@ -82,26 +82,27 @@ public class Deplacements implements KeyListener{
             case KeyEvent.VK_UP:
             	if(((robot.getCaseActuelle().getType() == TypeCase.VIRAGE)||(robot.getCaseActuelle().getType() == TypeCase.LIGNE)) && avancerPlayer(robot)){
             		commRobot.sendRequest(avancer, 3);
-            		System.out.println("From : "+robot.getCaseDerriere().getName()+" | To : "+robot.getCaseActuelle().getName()+" | Move on : "+robot.getCaseDerriere().getType());
+    				System.out.println(robot.getName()+" : "+robot.getCaseDerriere().getName()+" -> "+robot.getCaseActuelle().getName()+" ("+robot.getCaseDerriere().getType()+")");
                 }
             	break;
             case KeyEvent.VK_DOWN:
             	if(demitourPlayer(robot)){
             		commRobot.sendRequest(demitour, 3);
-            		System.out.println("From : "+robot.getCaseDerriere().getName()+" | To : "+robot.getCaseActuelle().getName()+" | Move on : "+robot.getCaseDerriere().getType());
+    				System.out.println(robot.getName()+" : "+robot.getCaseDerriere().getName()+" -> "+robot.getCaseActuelle().getName()+" ("+robot.getCaseDerriere().getType()+")");
             	}
             	break;
             case KeyEvent.VK_RIGHT:
             	if((robot.getCaseActuelle().getType() == TypeCase.SLIP) && slipDroitPlayer(robot)){
             		commRobot.sendRequest(slipdroit, 3);
-            		System.out.println("From : "+robot.getCaseDerriere().getName()+" | To : "+robot.getCaseActuelle().getName()+" | Move on : "+robot.getCaseDerriere().getType());
+    				System.out.println(robot.getName()+" : "+robot.getCaseDerriere().getName()+" -> "+robot.getCaseActuelle().getName()+" ("+robot.getCaseDerriere().getType()+")");
                 }
             	break;
             case KeyEvent.VK_LEFT:
             	if((robot.getCaseActuelle().getType() == TypeCase.SLIP) && slipGauchePlayer(robot)){
             		commRobot.sendRequest(slipgauche, 3);
-            		System.out.println("From : "+robot.getCaseDerriere().getName()+" | To : "+robot.getCaseActuelle().getName()+" | Move on : "+robot.getCaseDerriere().getType());
-                }
+    				//System.out.println("From : "+robot.getCaseDerriere().getName()+" ("+robot.getCaseDerriere().getType()+") | To : "+robot.getCaseActuelle().getName()+" ("+robot.getCaseActuelle().getType()+") | -> "+robot.getName());
+    				System.out.println(robot.getName()+" : "+robot.getCaseDerriere().getName()+" -> "+robot.getCaseActuelle().getName()+" ("+robot.getCaseDerriere().getType()+")");
+            	}
             	break;
             default:
                 break;
@@ -135,6 +136,8 @@ public class Deplacements implements KeyListener{
     	if(temp){
     		robot.setCaseDerriere(robot.getCaseActuelle());
         	robot.setCaseActuelle(destination);
+        	robot.recuperationVictime(destination);
+    		robot.depotVictimes(destination);
     	}
     	return temp;
     }
@@ -153,6 +156,8 @@ public class Deplacements implements KeyListener{
     		Node destination = robot.getCaseDerriere();
     		robot.setCaseDerriere(robot.getCaseActuelle());
         	robot.setCaseActuelle(destination);
+        	robot.recuperationVictime(destination);
+    		robot.depotVictimes(destination);
     	}
     	return test;
     }
@@ -172,6 +177,8 @@ public class Deplacements implements KeyListener{
     	if(test){
     		robot.setCaseDerriere(robot.getCaseActuelle());
         	robot.setCaseActuelle(destination);
+        	robot.recuperationVictime(destination);
+    		robot.depotVictimes(destination);
     	}
     	return test;
     }
@@ -191,6 +198,8 @@ public class Deplacements implements KeyListener{
     	if(test){
     		robot.setCaseDerriere(robot.getCaseActuelle());
         	robot.setCaseActuelle(destination);
+        	robot.recuperationVictime(destination);
+    		robot.depotVictimes(destination);
     	}
     	return test;
     }

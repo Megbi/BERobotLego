@@ -12,11 +12,17 @@ public class Robot {
 	private Node caseActuelle;
 	private int nombreVictimes = 0;
 	private NXTComm Comm;
+	private String name;
 	
 	public Robot(Node caseDepart, Node caseDerriere, String nomRobot) throws NXTCommException{
 		this.caseActuelle = caseDepart;
 		this.caseDerriere = caseDerriere;
 		this.Comm = linkToRobot(nomRobot);
+		this.name = nomRobot;
+	}
+	
+	public String getName(){
+		return name;
 	}
 	
 	
@@ -47,16 +53,16 @@ public class Robot {
 		if(node.isVictime() && (this.nombreVictimes < nombreVictimesMax)){
 			this.nombreVictimes++;
 			node.setVictime(false);
-			System.out.println("-> Victime récupérée <-");
+			System.out.println("-> Victime récupérée par "+this.name+" <-");
 		}
 		else if(node.isVictime() && (this.nombreVictimes == nombreVictimesMax)){
-			System.out.println("-> Impossible de prendre une victime supplémentaire <-");
+			System.out.println("-> "+this.name+" ne peut pas prendre une victime supplémentaire <-");
 		}
 	}
 	
 	public void depotVictimes(Node node){
 		if((nombreVictimes >= 1) && node.isHopital()){
-			System.out.println("-> Victime(s) déposée(s) <-");
+			System.out.println("-> Victime(s) déposée(s) par "+this.name+" <-");
 			this.nombreVictimes = 0;
 		}
 	}

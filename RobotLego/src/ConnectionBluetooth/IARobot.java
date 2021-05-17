@@ -15,34 +15,38 @@ public class IARobot {
     static byte[] slipdroit;
     static byte[] wait;
 	
-	public static void deplacement(Robot robot, Node destination) throws IOException, InterruptedException{
-		if(robot.getCaseDerriere().equals(destination)){
-			robot.getComm().sendRequest(demitour,3);
-			System.out.println("Le robot effectue Demi-tour");
+	public static void deplacement(Robot robotIA, Robot robotPlayer, Node destination) throws IOException, InterruptedException{
+		while(robotPlayer.getCaseActuelle().equals(destination) || robotPlayer.getCaseDerriere().equals(destination) ){
+			TimeUnit.SECONDS.sleep(1);
+		}
+		
+		if(robotIA.getCaseDerriere().equals(destination)){
+			robotIA.getComm().sendRequest(demitour,3);
+			//System.out.println("Le robot effectue Demi-tour");
 		}
 		else{
-			if(robot.getCaseActuelle().getType() == TypeCase.SLIP){
-				if(isSlipDroite(robot,destination)){
-					robot.getComm().sendRequest(slipdroit,3);
-					System.out.println("Le robot effectue SlipDroit");
+			if(robotIA.getCaseActuelle().getType() == TypeCase.SLIP){
+				if(isSlipDroite(robotIA,destination)){
+					robotIA.getComm().sendRequest(slipdroit,3);
+					//System.out.println("Le robot effectue SlipDroit");
 				}
 				else{
-					robot.getComm().sendRequest(slipgauche,3);
-					System.out.println("Le robot effectue SlipGauche");
+					robotIA.getComm().sendRequest(slipgauche,3);
+					//System.out.println("Le robot effectue SlipGauche");
 				}
 			}
 			else{
-				robot.getComm().sendRequest(avancer,3);
-				System.out.println("Le robot effectue AvancerF");
+				robotIA.getComm().sendRequest(avancer,3);
+				//System.out.println("Le robot effectue AvancerF");
 			}
 		}
-		robot.setCaseDerriere(robot.getCaseActuelle());
-		robot.setCaseActuelle(destination);
-		while(isRunning(robot)){
+		robotIA.setCaseDerriere(robotIA.getCaseActuelle());
+		robotIA.setCaseActuelle(destination);
+		while(isRunning(robotIA)){
 			TimeUnit.MICROSECONDS.sleep(100);
 		}
-		robot.recuperationVictime(destination);
-		robot.depotVictimes(destination);
+		robotIA.recuperationVictime(destination);
+		robotIA.depotVictimes(destination);
 		TimeUnit.SECONDS.sleep(1);
 	}
 	
