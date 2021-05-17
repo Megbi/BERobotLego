@@ -16,6 +16,9 @@ public class IARobot {
     static byte[] wait;
 	
 	public static void deplacement(Robot robotIA, Robot robotPlayer, Node destination) throws IOException, InterruptedException{
+		if(robotPlayer.getCaseActuelle().equals(destination) || robotPlayer.getCaseDerriere().equals(destination)){
+			System.out.println(robotIA.getName()+" : la case "+destination.getName()+" est occupée");
+		}
 		while(robotPlayer.getCaseActuelle().equals(destination) || robotPlayer.getCaseDerriere().equals(destination) ){
 			TimeUnit.SECONDS.sleep(1);
 		}

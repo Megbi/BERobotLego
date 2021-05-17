@@ -101,7 +101,6 @@ public class MainParcours {
 		
 		graph = Dijkstra.calculateShortestPathFromSource(graph, nodeDepart);
 		
-		System.out.println("");
 		System.out.println("*** "+robotIA.getName()+" fait le parcours de "+nodeDepart.getName()+" vers "+nodeArrivee.getName()+" ***");
 		
 		for(Node n : nodeArrivee.getShortestPath()){
