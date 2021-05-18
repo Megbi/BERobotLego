@@ -14,6 +14,16 @@ public class Graph {
 	public Set<Node> getCases() {
 		return nodes;
 	}
+	
+	public Node getCase(String name){
+		Node res = null;
+		for(Node n : this.getCases()){
+			if(n.getName() == name){
+				return n;
+			}
+		}
+		return res;
+	}
 
 	public void djikstraReset() {
 		for (Node n : this.nodes) {

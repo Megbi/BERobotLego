@@ -110,17 +110,11 @@ public class MainParcours {
 					IARobot.deplacement(robotIA, robotPlayer, n);
 				}
 			}
-			else{
-				System.out.println("Else 1");
-			}
 		}
 		
 		if(nodeArrivee.isVictime() || nodeArrivee.isHopital()){
 			System.out.println(robotIA.getName()+" : "+robotIA.getCaseActuelle().getName()+" -> "+nodeArrivee.getName()+" ("+robotIA.getCaseActuelle().getType()+")");
 			IARobot.deplacement(robotIA, robotPlayer, nodeArrivee);
-		}
-		else{
-			System.out.println("Else 2");
 		}
 	}
 
