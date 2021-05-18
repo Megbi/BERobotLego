@@ -104,19 +104,24 @@ public class MainParcours {
 		System.out.println("*** "+robotIA.getName()+" fait le parcours de "+nodeDepart.getName()+" vers "+nodeArrivee.getName()+" ***");
 		
 		for(Node n : nodeArrivee.getShortestPath()){
-			if(!n.equals(robotIA.getCaseActuelle())){
-				//System.out.println("- On part de la case "+robotIA.getCaseActuelle().getName()+" et on va" +
-				//		" sur la case "+n.getName());
-				//System.out.println("From : "+robotIA.getCaseDerriere().getName()+" ("+robotIA.getCaseDerriere().getType()+") | To : "+robotIA.getCaseActuelle().getName()+" ("+robotIA.getCaseActuelle().getType()+") | -> "+robotIA.getName());
-				System.out.println(robotIA.getName()+" : "+robotIA.getCaseActuelle().getName()+" -> "+n.getName()+" ("+robotIA.getCaseActuelle().getType()+")");
-				IARobot.deplacement(robotIA, robotPlayer, n);
+			if(nodeArrivee.isVictime() || nodeArrivee.isHopital()){
+				if(!n.equals(robotIA.getCaseActuelle())){
+					System.out.println(robotIA.getName()+" : "+robotIA.getCaseActuelle().getName()+" -> "+n.getName()+" ("+robotIA.getCaseActuelle().getType()+")");
+					IARobot.deplacement(robotIA, robotPlayer, n);
+				}
+			}
+			else{
+				System.out.println("Else 1");
 			}
 		}
 		
-		System.out.println(robotIA.getName()+" : "+robotIA.getCaseActuelle().getName()+" -> "+nodeArrivee.getName()+" ("+robotIA.getCaseActuelle().getType()+")");
-		IARobot.deplacement(robotIA, robotPlayer, nodeArrivee);
-		//System.out.println("Vous êtes arrivé sur la case "+nodeArrivee.getName());
-		//System.out.println("");
+		if(nodeArrivee.isVictime() || nodeArrivee.isHopital()){
+			System.out.println(robotIA.getName()+" : "+robotIA.getCaseActuelle().getName()+" -> "+nodeArrivee.getName()+" ("+robotIA.getCaseActuelle().getType()+")");
+			IARobot.deplacement(robotIA, robotPlayer, nodeArrivee);
+		}
+		else{
+			System.out.println("Else 2");
+		}
 	}
 
 	public static int poidsChemin(Graph graph, Node nodeDepart, Node nodeArrivee, Robot robot){

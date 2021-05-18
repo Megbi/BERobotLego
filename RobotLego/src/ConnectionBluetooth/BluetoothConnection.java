@@ -14,16 +14,9 @@ import parcours.TypeCase;
 
 public class BluetoothConnection {
 	  public static void main (String[] args) throws NXTCommException, InterruptedException, UnsupportedEncodingException, IOException {
-	    /*NXTComm nxtComm = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
-	    NXTInfo[] nxtInfo = nxtComm.search("OwOmega");
-	    if (nxtInfo.length == 0) {
-	        System.out.println("No nxt found");
-	        System.exit(1);
-	    }
-	    nxtComm.open(nxtInfo[0]);*/
-		Node nodeStart = new Node("Empty", -1, -1, TypeCase.LIGNE, false, false);
+	    Node nodeStart = new Node("Empty", -1, -1, TypeCase.LIGNE, false, false);
 		  
-		Node nodeA = new Node("A", 0, 0, TypeCase.VIRAGE, true, false);
+		Node nodeA = new Node("A", 0, 0, TypeCase.VIRAGE, false, false);
 		Node nodeB = new Node("B", 0, 1, TypeCase.SLIP, false, false);
 		Node nodeC = new Node("C", 0, 2, TypeCase.SLIP, false, false);
 		Node nodeO = new Node("O", 0, 3, TypeCase.VIRAGE, true, false);
@@ -101,8 +94,6 @@ public class BluetoothConnection {
 		  
 	    Robot robotPlayer = new Robot(caseDepartPlayer, caseDerrierePlayer, "OwOmega");
 	    Robot robotIA = new Robot(caseDepartIA, caseDerriereIA, "FUBUKI");
-	    
-	    
 	    
 	    JFrame f = new JFrame();
 	    f.addKeyListener(new Deplacements(robotPlayer));
