@@ -5,7 +5,11 @@ import java.util.Set;
 
 public class Graph {
 
-    private Set<Node> nodes = new HashSet<Node>();
+    public Graph() {
+		
+	}
+
+	private Set<Node> nodes = new HashSet<Node>();
     
     public void addNode(Node case0) {
     	nodes.add(case0);
@@ -44,5 +48,7 @@ public class Graph {
 		}
 		return listeHopitaux;
 	}
+	
+	
 	// getters and setters 
 }

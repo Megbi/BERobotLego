@@ -1,8 +1,8 @@
 package parcours;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Node {
@@ -15,8 +15,9 @@ public class Node {
     private TypeCase type;
     private boolean victime;
     private boolean hopital;
-    
-    private List<Node> shortestPath = new LinkedList<Node>();
+    private boolean occupe = false;
+
+	private List<Node> shortestPath = new LinkedList<Node>();
     
     private Integer distance = Integer.MAX_VALUE;
     
@@ -51,6 +52,14 @@ public class Node {
     public int getSlipJoinX(){
     	return slipJoinX;
     }
+    
+    public boolean isOccupe() {
+		return occupe;
+	}
+
+	public void setOccupe(boolean occupe) {
+		this.occupe = occupe;
+	}
     
     public int getSlipJoinY(){
     	return slipJoinY;
