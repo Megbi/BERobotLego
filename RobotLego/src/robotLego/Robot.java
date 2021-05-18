@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -30,8 +29,6 @@ public class Robot {
 	private int nombreVictimes = 0;
 	private NXTComm Comm;
 	private String name;
-	@SuppressWarnings("unused")
-	private List<Node> trajet;
 	private Graph parcours;
 	
 	public Robot(Graph graph, Node caseDepart, Node caseDerriere, String nomRobot) throws NXTCommException, UnsupportedEncodingException{
