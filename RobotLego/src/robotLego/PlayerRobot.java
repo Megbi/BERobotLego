@@ -1,6 +1,7 @@
 package robotLego;
 
 import java.awt.Dimension;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Set;
@@ -41,7 +42,10 @@ public class PlayerRobot extends Robot {
 	    });
 	}
 
-	public Node canDemitourPlayer() {
+	public Node canDemitourPlayer() throws IOException {
+		if (isRunning()) {
+			return null;
+		}
     	Map<Node,Integer> liste = this.getCaseActuelle().getAdjacentNodes();
     	Set<Node> nodeAdjacentes = liste.keySet();
     	Node destination = null;
@@ -54,7 +58,10 @@ public class PlayerRobot extends Robot {
 		return destination;
 	}
 
-	public Node canAvancerPlayer() {
+	public Node canAvancerPlayer() throws IOException {
+		if (isRunning()) {
+			return null;
+		}
     	Map<Node,Integer> liste = this.getCaseActuelle().getAdjacentNodes();
     	Set<Node> nodeAdjacentes = liste.keySet();
     	Node destination = null;
@@ -67,7 +74,10 @@ public class PlayerRobot extends Robot {
 		return destination;
 	}
 
-	public Node canSlipDroitPlayer() {
+	public Node canSlipDroitPlayer() throws IOException {
+		if (isRunning()) {
+			return null;
+		}
     	Map<Node,Integer> liste = this.getCaseActuelle().getAdjacentNodes();
     	Set<Node> nodeAdjacentes = liste.keySet();
     	Node destination = null;
@@ -80,7 +90,10 @@ public class PlayerRobot extends Robot {
 		return destination;
 	}
 
-	public Node canSlipGauchePlayer() {
+	public Node canSlipGauchePlayer() throws IOException {
+		if (isRunning()) {
+			return null;
+		}
     	Map<Node,Integer> liste = this.getCaseActuelle().getAdjacentNodes();
     	Set<Node> nodeAdjacentes = liste.keySet();
     	Node destination = null;
