@@ -1,16 +1,17 @@
 package main;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 
 import lejos.pc.comm.NXTCommException;
 import parcours.Graph;
 import parcours.Node;
 import parcours.TypeCase;
+import robotLego.PlayerRobot;
 import robotLego.Robot;
 
 public class Main {
 
-	public static void main(String[] args) throws UnsupportedEncodingException, NXTCommException {
+	public static void main(String[] args) throws NXTCommException, IOException, InterruptedException {
 	Node nodeStart = new Node("Empty", -1, -1, TypeCase.LIGNE, false, false);
 	
 	Node nodeA = new Node("A", 0, 0, TypeCase.VIRAGE, true, false);
@@ -21,7 +22,7 @@ public class Main {
 	Node nodeE = new Node("E", 1, 1, TypeCase.LIGNE, false, false);
 	Node nodeF = new Node("F", 1, 2, TypeCase.VIRAGE, false, false);
 	Node nodeG = new Node("G", 1, 3, TypeCase.SLIP, false, true);
-	Node nodeH = new Node("H", 2, 0, TypeCase.VIRAGE, true, false);
+	Node nodeH = new Node("H", 2, 0, TypeCase.VIRAGE, true, false); // true normalement, test+10
 	Node nodeI = new Node("I", 2, 1, TypeCase.SLIP, false, true);
 	Node nodeJ = new Node("J", 2, 2, TypeCase.LIGNE, false, false);
 	Node nodeK = new Node("K", 2, 3, TypeCase.LIGNE, false, false);
@@ -84,15 +85,10 @@ public class Main {
 	graph.addNode(nodeN);
 	graph.addNode(nodeO);
 
+	Robot robotPlayer = new PlayerRobot(graph, nodeK, nodeN, "OwOmega");
+	Robot robotIA = new Robot(graph, nodeJ, nodeStart, "FUBUKI");
 	
-
-	
-	@SuppressWarnings("unused")
-	Robot robotIA = new Robot(graph, nodeJ, nodeStart, "OwOmega");
-	//Robot robotPlayer = new Robot(nodeK, nodeN, "FUBUKI");
-	//
-	
-	//finish(graph, robotIA, robotPlayer);
+	robotIA.finish(robotPlayer);
 	
 	}
 

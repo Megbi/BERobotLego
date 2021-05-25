@@ -1,6 +1,7 @@
 package robotLego;
 
 import java.awt.Dimension;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Set;
@@ -16,15 +17,8 @@ public class PlayerRobot extends Robot {
 	public PlayerRobot(Graph graph, Node caseDepart, Node caseDerriere, String nomRobot) throws NXTCommException, UnsupportedEncodingException {
 		super(graph,caseDepart, caseDerriere, nomRobot);
 		
-		/*NXTComm nxtComm = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
-	    NXTInfo[] nxtInfo = nxtComm.search("OwOmega");
-	    if (nxtInfo.length == 0) {
-	        System.out.println("No nxt found");
-	        System.exit(1);
-	    }
-	    nxtComm.open(nxtInfo[0]);*/
-		
-		
+		this.getCaseActuelle().setOccupe(true);
+		this.getCaseDerriere().setOccupe(true);
 		
 		JFrame f = new JFrame();
 		f.addKeyListener(new InterfaceBluetooth(this));
@@ -52,6 +46,14 @@ public class PlayerRobot extends Robot {
     		}
     	}
 		return destination;
+	}
+
+	@Override
+	public void updatePositionAndWait(Node destination) throws IOException,
+			InterruptedException {
+		this.getCaseDerriere().setOccupe(false);
+		super.updatePositionAndWait(destination);
+		this.getCaseActuelle().setOccupe(true);
 	}
 
 	public Node canAvancerPlayer() {
