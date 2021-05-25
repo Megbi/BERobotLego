@@ -319,7 +319,6 @@ public class Robot {
 				resultat = n;
 				i = poidsChemin(this.getCaseActuelle(), n);
 			}
-			System.out.println(n.getName()+" a un poids de "+poidsChemin(this.getCaseActuelle(), n)+" !!");
 		}
 		return resultat;
 	}
