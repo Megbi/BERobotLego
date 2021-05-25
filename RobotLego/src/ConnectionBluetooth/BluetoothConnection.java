@@ -20,7 +20,7 @@ public class BluetoothConnection {
 		Node nodeB = new Node("B", 0, 1, TypeCase.SLIP, false, false);
 		Node nodeC = new Node("C", 0, 2, TypeCase.SLIP, false, false);
 		Node nodeO = new Node("O", 0, 3, TypeCase.VIRAGE, true, false);
-		Node nodeD = new Node("D", 1, 0, TypeCase.LIGNE, false, false); 
+		Node nodeD = new Node("D", 1, 0, TypeCase.LIGNE, false, true); 
 		Node nodeE = new Node("E", 1, 1, TypeCase.LIGNE, false, false);
 		Node nodeF = new Node("F", 1, 2, TypeCase.VIRAGE, false, false);
 		Node nodeG = new Node("G", 1, 3, TypeCase.SLIP, false, true);
@@ -86,11 +86,11 @@ public class BluetoothConnection {
 		graph.addNode(nodeN);
 		graph.addNode(nodeO);
 			
-		Node caseDepartPlayer = nodeK;
-		Node caseDerrierePlayer = nodeN;
+		Node caseDepartPlayer = nodeF;
+		Node caseDerrierePlayer = nodeC;
 		
-		Node caseDepartIA = nodeJ;
-		Node caseDerriereIA = nodeF;
+		Node caseDepartIA = nodeN;
+		Node caseDerriereIA = nodeM;
 		  
 	    Robot robotPlayer = new Robot(caseDepartPlayer, caseDerrierePlayer, "OwOmega");
 	    Robot robotIA = new Robot(caseDepartIA, caseDerriereIA, "FUBUKI");

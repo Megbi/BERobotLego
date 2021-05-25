@@ -25,22 +25,18 @@ public class IARobot {
 		
 		if(robotIA.getCaseDerriere().equals(destination)){
 			robotIA.getComm().sendRequest(demitour,3);
-			//System.out.println("Le robot effectue Demi-tour");
 		}
 		else{
 			if(robotIA.getCaseActuelle().getType() == TypeCase.SLIP){
 				if(isSlipDroite(robotIA,destination)){
 					robotIA.getComm().sendRequest(slipdroit,3);
-					//System.out.println("Le robot effectue SlipDroit");
 				}
 				else{
 					robotIA.getComm().sendRequest(slipgauche,3);
-					//System.out.println("Le robot effectue SlipGauche");
 				}
 			}
 			else{
 				robotIA.getComm().sendRequest(avancer,3);
-				//System.out.println("Le robot effectue AvancerF");
 			}
 		}
 		robotIA.setCaseDerriere(robotIA.getCaseActuelle());
