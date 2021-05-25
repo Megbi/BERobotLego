@@ -22,7 +22,7 @@ public class Main {
 	Node nodeE = new Node("E", 1, 1, TypeCase.LIGNE, false, false);
 	Node nodeF = new Node("F", 1, 2, TypeCase.VIRAGE, false, false);
 	Node nodeG = new Node("G", 1, 3, TypeCase.SLIP, false, true);
-	Node nodeH = new Node("H", 2, 0, TypeCase.VIRAGE, true, false); // true normalement, test+10
+	Node nodeH = new Node("H", 2, 0, TypeCase.VIRAGE, true, false);
 	Node nodeI = new Node("I", 2, 1, TypeCase.SLIP, false, true);
 	Node nodeJ = new Node("J", 2, 2, TypeCase.LIGNE, false, false);
 	Node nodeK = new Node("K", 2, 3, TypeCase.LIGNE, false, false);
