@@ -35,8 +35,8 @@ public class Robot {
 		this.caseActuelle = caseDepart;
 		this.caseDerriere = caseDerriere;
 		this.parcours = graph;
-		this.Comm = linkToRobot();
 		this.name = nomRobot;
+		this.Comm = linkToRobot();
 		init();
 	}
 	//Varargs???
@@ -84,8 +84,12 @@ public class Robot {
 		updatePositionAndWait(destination);
 	}
 	public void updatePositionAndWait(Node destination) throws IOException, InterruptedException {
+//		this.caseDerriere.setOccupe(false);
+		
 		this.setCaseDerriere(this.getCaseActuelle());
 		this.setCaseActuelle(destination);
+		
+//		this.caseActuelle.setOccupe(true);
 		
 		while(isRunning()){
 			TimeUnit.MICROSECONDS.sleep(100);
@@ -338,19 +342,18 @@ public class Robot {
 		System.out.println("*** "+this.getName()+" fait le parcours de "+nodeDepart.getName()+" vers "+nodeArrivee.getName()+" ***");
 		
 		for(Node n : nodeArrivee.getShortestPath()){
-			if(!n.equals(this.getCaseActuelle())){
-				//System.out.println("- On part de la case "+robotIA.getCaseActuelle().getName()+" et on va" +
-				//		" sur la case "+n.getName());
-				//System.out.println("From : "+robotIA.getCaseDerriere().getName()+" ("+robotIA.getCaseDerriere().getType()+") | To : "+robotIA.getCaseActuelle().getName()+" ("+robotIA.getCaseActuelle().getType()+") | -> "+robotIA.getName());
-				System.out.println(this.getName()+" : "+this.getCaseActuelle().getName()+" -> "+n.getName()+" ("+this.getCaseActuelle().getType()+")");
-				this.deplacement(robotPlayer, n);
+			if(nodeArrivee.isVictime() || nodeArrivee.isHopital()){
+				if(!n.equals(caseActuelle)){
+					System.out.println(this.name+" : "+this.caseActuelle.getName()+" -> "+nodeArrivee.getName()+" ("+this.caseActuelle.getType()+")");
+					deplacement( robotPlayer, n);
+				}
 			}
 		}
 		
-		System.out.println(this.getName()+" : "+this.getCaseActuelle().getName()+" -> "+nodeArrivee.getName()+" ("+this.getCaseActuelle().getType()+")");
-		this.deplacement(robotPlayer, nodeArrivee);
-		//System.out.println("Vous êtes arrivé sur la case "+nodeArrivee.getName());
-		//System.out.println("");
+		if(nodeArrivee.isVictime() || nodeArrivee.isHopital()){
+			System.out.println(this.name+" : "+this.caseActuelle.getName()+" -> "+nodeArrivee.getName()+" ("+this.caseActuelle.getType()+")");
+			deplacement(robotPlayer, nodeArrivee);
+		}
 	}
 	
 
@@ -359,7 +362,7 @@ public class Robot {
 		if (sourceDistance + edgeWeigh < evaluationNode.getDistance()) {
 			evaluationNode.setDistance(sourceDistance + edgeWeigh);
 			if (evaluationNode.isOccupe()) {
-				evaluationNode.setDistance(evaluationNode.getDistance()+3);
+				evaluationNode.setDistance(evaluationNode.getDistance()+10);
 			}
 			LinkedList<Node> shortestPath = new LinkedList<Node>(sourceNode.getShortestPath());
 			shortestPath.add(sourceNode);

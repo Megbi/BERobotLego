@@ -1,16 +1,17 @@
 package main;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 
 import lejos.pc.comm.NXTCommException;
 import parcours.Graph;
 import parcours.Node;
 import parcours.TypeCase;
+import robotLego.PlayerRobot;
 import robotLego.Robot;
 
 public class Main {
 
-	public static void main(String[] args) throws UnsupportedEncodingException, NXTCommException {
+	public static void main(String[] args) throws NXTCommException, IOException, InterruptedException {
 	Node nodeStart = new Node("Empty", -1, -1, TypeCase.LIGNE, false, false);
 	
 	Node nodeA = new Node("A", 0, 0, TypeCase.VIRAGE, true, false);
@@ -84,15 +85,10 @@ public class Main {
 	graph.addNode(nodeN);
 	graph.addNode(nodeO);
 
+	Robot robotPlayer = new PlayerRobot(graph, nodeK, nodeN, "OwOmega");
+	Robot robotIA = new Robot(graph, nodeJ, nodeStart, "FUBUKI");
 	
-
-	
-	@SuppressWarnings("unused")
-	Robot robotIA = new Robot(graph, nodeJ, nodeStart, "OwOmega");
-	//Robot robotPlayer = new Robot(nodeK, nodeN, "FUBUKI");
-	//
-	
-	//finish(graph, robotIA, robotPlayer);
+	robotIA.finish(robotPlayer);
 	
 	}
 
